@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Builder — ResumeForge</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    // pdf.js worker
+    if (window['pdfjsLib']) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-mark">RF</div>
+      ResumeForge
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="index.html#features">Features</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="builder-toolbar">
+  <div class="left">
+    <strong style="font-size:0.95rem;">Resume Builder</strong>
+    <span class="save-status" id="save-status">All changes saved</span>
+  </div>
+  <div class="right">
+    <button class="btn btn-secondary btn-sm" id="btn-import">⤓ Import</button>
+    <button class="btn btn-ghost btn-sm" id="btn-clear">Clear all</button>
+    <button class="btn btn-secondary btn-sm" id="btn-print">Print</button>
+    <button class="btn btn-primary btn-sm" id="btn-download">⬇ Download PDF</button>
+  </div>
+</div>
+
+<div class="builder-shell">
+
+  <aside class="builder-form">
+
+    <div class="form-section open" data-section="personal">
+      <div class="form-section-header">
+        <h3>👤 Personal Details</h3>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="form-section-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full name</label>
+            <input type="text" data-field="personal.name" placeholder="Jane Doe" />
+          </div>
+          <div class="form-group">
+            <label>Job title</label>
+            <input type="text" data-field="personal.jobTitle" placeholder="Marketing Manager" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" data-field="personal.email" placeholder="jane@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" data-field="personal.phone" placeholder="(555) 123-4567" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" data-field="personal.location" placeholder="New York, NY" />
+          </div>
+          <div class="form-group">
+            <label>Website</label>
+            <input type="text" data-field="personal.website" placeholder="janedoe.com" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>LinkedIn</label>
+          <input type="text" data-field="personal.linkedin" placeholder="linkedin.com/in/janedoe" />
+        </div>
+        <div class="form-group">
+          <label>Professional summary</label>
+          <textarea data-field="personal.summary" rows="4" placeholder="A 2-4 sentence summary of who you are and what you bring to the table."></textarea>
+          <div class="help">Tip: keep it concise. 50–100 words is the sweet spot.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section open" data-section="experience">
+      <div class="form-section-header"><h3>💼 Work Experience</h3><span class="chevron">▾</span></div>
+      <div class="form-section-body">
+        <div class="repeater" data-repeater="experience"></div>
+        <button class="add-btn" data-add="experience">+ Add work experience</button>
+      </div>
+    </div>
+
+    <div class="form-section" data-section="education">
+      <div class="form-section-header"><h3>🎓 Education</h3><span class="chevron">▾</span></div>
+      <div class="form-section-body">
+        <div class="repeater" data-repeater="education"></div>
+        <button class="add-btn" data-add="education">+ Add education</button>
+      </div>
+    </div>
+
+    <div class="form-section" data-section="skills">
+      <div class="form-section-header"><h3>⚡ Skills</h3><span class="chevron">▾</span></div>
+      <div class="form-section-body">
+        <div id="skills-list"></div>
+        <div class="skill-input-row">
+          <input type="text" id="skill-input" placeholder="Add a skill and press Enter" />
+          <button class="btn btn-primary btn-sm" id="add-skill">Add</button>
+        </div>
+        <div class="help" style="margin-top:8px;">Tip: include keywords from the job description for a better ATS match.</div>
+      </div>
+    </div>
+
+    <div class="form-section" data-section="projects">
+      <div class="form-section-header"><h3>🚀 Projects</h3><span class="chevron">▾</span></div>
+      <div class="form-section-body">
+        <div class="repeater" data-repeater="projects"></div>
+        <button class="add-btn" data-add="projects">+ Add project</button>
+      </div>
+    </div>
+
+    <div class="form-section" data-section="certifications">
+      <div class="form-section-header"><h3>🏅 Certifications</h3><span class="chevron">▾</span></div>
+      <div class="form-section-body">
+        <div class="repeater" data-repeater="certifications"></div>
+        <button class="add-btn" data-add="certifications">+ Add certification</button>
+      </div>
+    </div>
+
+  </aside>
+
+  <main class="builder-preview">
+    <div id="resume-output"></div>
+  </main>
+
+  <aside class="builder-sidebar">
+    <div class="sidebar-section">
+      <h4>Templates</h4>
+      <div class="template-list" id="template-list"></div>
+    </div>
+    <div class="sidebar-section ats-checker">
+      <h4>ATS Match Score</h4>
+      <div class="ats-score-circle">
+        <svg width="110" height="110" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="48" stroke="#e2e8f0" stroke-width="8" fill="none" />
+          <circle id="ats-arc" cx="55" cy="55" r="48" stroke="var(--primary)" stroke-width="8" fill="none" stroke-dasharray="301.6" stroke-dashoffset="301.6" stroke-linecap="round" />
+        </svg>
+        <div class="ats-score-text" id="ats-score">—</div>
+      </div>
+      <div class="ats-score-label" id="ats-label">Paste a job description below to score your resume.</div>
+      <textarea id="job-description" placeholder="Paste the job description here…"></textarea>
+      <button class="btn btn-primary btn-sm" id="run-ats" style="width:100%;margin-top:8px;">Analyze keywords</button>
+      <div class="keyword-list" id="keyword-list"></div>
+    </div>
+  </aside>
+</div>
+
+<div class="modal-backdrop" id="import-modal">
+  <div class="modal" role="dialog" aria-labelledby="import-title">
+    <div class="modal-header">
+      <h2 id="import-title">Import your details</h2>
+      <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-tabs" id="modal-tabs">
+      <button class="modal-tab active" data-tab="linkedin-export">LinkedIn (free)</button>
+      <button class="modal-tab" data-tab="pdf">Resume PDF</button>
+      <button class="modal-tab" data-tab="proxycurl">LinkedIn URL (paid)</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-panel active" data-panel="linkedin-export">
+        <h3>Import from your LinkedIn data export</h3>
+        <p class="help-text">LinkedIn lets you download your own profile as CSV files for free. Upload that ZIP (or the individual CSVs) and we'll fill the form automatically.</p>
+        <ol>
+          <li>Go to <a href="https://www.linkedin.com/mypreferences/d/download-my-data" target="_blank" rel="noopener">LinkedIn → Settings → Get a copy of your data</a></li>
+          <li>Choose <strong>"Want something in particular?"</strong> and select Profile, Positions, Education, Skills</li>
+          <li>Click <strong>Request archive</strong>. LinkedIn emails you a ZIP within a few minutes.</li>
+          <li>Drop the ZIP (or its CSVs) below.</li>
+        </ol>
+        <label class="dropzone" id="linkedin-dropzone">
+          <input type="file" id="linkedin-file" accept=".zip,.csv" multiple hidden />
+          <div class="dz-icon">📁</div>
+          <div class="dz-title">Drop your LinkedIn ZIP here, or click to browse</div>
+          <div class="dz-sub">Accepts .zip from LinkedIn, or individual .csv files</div>
+        </label>
+        <div class="import-status" id="linkedin-status"></div>
+      </div>
+      <div class="tab-panel" data-panel="pdf">
+        <h3>Import from an existing resume PDF</h3>
+        <p class="help-text">Upload any resume PDF — including ones exported from Indeed, Google Docs, Word, or another resume builder. We'll do a best-effort parse of your contact info, experience, and education.</p>
+        <div class="warning-box"><strong>⚠ Heads up:</strong> PDF parsing is approximate. We'll fill what we can and dump the rest into the summary so you can move it around. Always double-check the result.</div>
+        <label class="dropzone" id="pdf-dropzone">
+          <input type="file" id="pdf-file" accept=".pdf" hidden />
+          <div class="dz-icon">📄</div>
+          <div class="dz-title">Drop your resume PDF, or click to browse</div>
+          <div class="dz-sub">Single .pdf file, parsed locally in your browser</div>
+        </label>
+        <div class="import-status" id="pdf-status"></div>
+      </div>
+      <div class="tab-panel" data-panel="proxycurl">
+        <h3>Fetch from a LinkedIn profile URL</h3>
+        <p class="help-text">Use <a href="https://nubela.co/proxycurl" target="_blank" rel="noopener">Proxycurl</a> to fetch a LinkedIn profile by URL. You'll need a Proxycurl API key (paid, ~$0.01–0.10 per fetch). Your key never leaves your browser.</p>
+        <div class="warning-box"><strong>⚠ Browser CORS limitation:</strong> Proxycurl's API may block direct browser calls. If the request fails with a CORS error, you'll need to deploy this site with a small backend proxy, or use the LinkedIn Data Export option above (which is free and works in-browser).</div>
+        <div class="field-group-row">
+          <div>
+            <label class="field-label">Proxycurl API key</label>
+            <input type="password" class="field-input" id="px-key" placeholder="Bearer token from nubela.co" autocomplete="off" />
+          </div>
+          <div>
+            <label class="field-label">LinkedIn profile URL</label>
+            <input type="url" class="field-input" id="px-url" placeholder="https://www.linkedin.com/in/username/" />
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn btn-primary" id="px-fetch">Fetch profile</button>
+          <label style="font-size:0.85rem;color:var(--text-body);display:flex;align-items:center;gap:6px;">
+            <input type="checkbox" id="px-remember" /> Remember API key (stored in this browser only)
+          </label>
+        </div>
+        <div class="import-status" id="px-status"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary btn-sm" id="modal-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/templates.js"></script>
+<script src="js/import.js"></script>
+<script src="js/builder.js"></script>
+</body>
+</html>
