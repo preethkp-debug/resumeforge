@@ -280,3 +280,45 @@ img { max-width: 100%; display: block; }
 @media (max-width: 960px) { .hero-inner { grid-template-columns: 1fr; } .hero h1 { font-size: 2.4rem; } .feature-grid { grid-template-columns: 1fr 1fr; } .steps-grid { grid-template-columns: 1fr 1fr; } .templates-grid { grid-template-columns: 1fr 1fr; } .footer-inner { grid-template-columns: 1fr 1fr; } .builder-shell { display: block; height: auto; } .builder-form, .builder-preview, .builder-sidebar { height: auto; } }
 @media (max-width: 640px) { .nav-links { display: none; } .hero h1 { font-size: 2rem; } .section h2 { font-size: 1.8rem; } .feature-grid, .steps-grid, .templates-grid, .footer-inner { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } .resume-page { width: 100%; padding: 0.4in; } }
 @media print { .navbar, .builder-form, .builder-sidebar, .builder-toolbar { display: none; } .builder-shell { display: block; } .builder-preview { background: white; padding: 0; overflow: visible; } .resume-page { box-shadow: none; } }
+
+/* ============================================
+   STATS BAR
+   ============================================ */
+.stats-bar { background: var(--text-dark); color: white; padding: 36px 24px; }
+.stats-bar-inner { max-width: var(--max-width); margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+.stat-block .stat-num { font-size: 2.4rem; font-weight: 800; color: white; letter-spacing: -0.02em; display: block; }
+.stat-block .stat-label { color: #94a3b8; font-size: 0.92rem; margin-top: 4px; }
+
+/* TRUST STRIP */
+.trust-strip { padding: 60px 24px; background: white; }
+.trust-strip-inner { max-width: var(--max-width); margin: 0 auto; text-align: center; }
+.trust-strip h3 { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 24px; }
+.trust-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.trust-badge { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: var(--bg-light); border: 1px solid var(--border); border-radius: 999px; font-size: 0.92rem; font-weight: 500; color: var(--text-body); }
+.trust-badge .badge-icon { font-size: 1.05rem; }
+
+/* FAQ */
+.faq { background: var(--bg-light); }
+.faq-list { max-width: 760px; margin: 0 auto; }
+.faq-item { background: white; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; transition: all 0.15s; }
+.faq-item:hover { border-color: var(--primary-light); }
+.faq-question { width: 100%; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; background: white; border: none; cursor: pointer; font-family: inherit; font-size: 1rem; font-weight: 600; color: var(--text-dark); text-align: left; transition: background 0.15s; }
+.faq-question:hover { background: var(--bg-light); }
+.faq-question .faq-toggle { font-size: 1.4rem; color: var(--primary); font-weight: 300; flex-shrink: 0; margin-left: 16px; transition: transform 0.2s; }
+.faq-item.open .faq-toggle { transform: rotate(45deg); }
+.faq-answer { display: none; padding: 0 22px 20px; color: var(--text-body); font-size: 0.96rem; line-height: 1.65; }
+.faq-item.open .faq-answer { display: block; }
+.faq-answer p { margin-bottom: 10px; }
+.faq-answer p:last-child { margin-bottom: 0; }
+
+/* USE CASES */
+.usecases { background: white; }
+.usecase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.usecase-card { padding: 32px; border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--bg-light); transition: all 0.2s; }
+.usecase-card:hover { background: white; border-color: var(--primary); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.usecase-card .usecase-tag { display: inline-block; background: var(--primary-light); color: var(--primary-dark); font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.04em; }
+.usecase-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.01em; }
+.usecase-card p { color: var(--text-body); font-size: 0.95rem; margin-bottom: 14px; }
+.usecase-card a { color: var(--primary); font-weight: 600; font-size: 0.92rem; }
+@media (max-width: 960px) { .stats-bar-inner { grid-template-columns: 1fr 1fr; } .usecase-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .stats-bar-inner { grid-template-columns: 1fr; } }
